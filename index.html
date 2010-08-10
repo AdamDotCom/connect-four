@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>  
+    <title>Connect Four Exercise</title>
+    <link rel="stylesheet" type="text/css" href="connect-four.css" />
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="connectFour.core.js"></script>
+    <script type="text/javascript" src="connectFour.tests.js"></script>
+    <script type="text/javascript">
+      var connectFour;
+      if (!connectFour) connectFour = {};
+
+      connectFour.UI = function() {      
+        var player = 1;
+        
+        function togglePlayer() {
+          if (player === 1) {
+            player = 2;
+          } else {
+            player = 1;
+          }
+        }
+          
+        function drawWinner() {
+          var message = 'Huzzah!! Player ';
+          if (player === 1) {
+            message += 'one ';
+          } else {
+            message += 'two ';
+          }
+          message += 'wins!!';
+          
+          drawMessage(message);
+        }
+        
+        function drawDisc(target, yAxis) {
+          $(target.children()[5-yAxis]).addClass('player-' + player);
+        }
+        
+        function drawError(){
+          drawMessage('Whoops! Try a different column.');
+        }
+        
+        function drawMessage(message) {
+          $('#connect-four .message').text(message);
+        }
+        
+        function drawBoard() {
+          // Would have liked to create the board programmatically
+        }
+        
+        function drawIntro() {
+          drawMessage('Click on the board below to begin playing');
+        }
+        
+        $(document).ready(function () {
+          
+          // Would have liked to pass in a setting object and create board programmatically
+          connectFour.core.buildBoard();
+          
+          drawIntro();
+          drawBoard();
+      
+          $('#connect-four').click(function(event) {
+            var target = $(event.target);
+            var column = target.attr('id');
+            if (column === '') {
+              target = target.parent();
+              column = target.attr('id');
+            }
+                
+            column = parseInt(column, 10);
+            
+            var yAxis = connectFour.core.dropDisc(player, column);
+
+            if(yAxis !== -1){                  
+              drawDisc(target, yAxis);
+              if (connectFour.core.checkForWin(player, column, yAxis)) {
+                drawWinner();
+                connectFour.core.buildBoard();
+                drawBoard();
+              } 
+              togglePlayer();
+              
+            } else {
+              drawError();
+            }
+                  
+            return false;
+          });    
+        });
+      }();
+      
+    </script>
+  </head>
+  <body>
+  
+    <div id="connect-four">
+      <h3>Connect Four</h3>
+      <span class="message"></span>
+      <div id="board">
+        <ul id="0">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="1">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="2">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="3">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="4">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="5">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <ul id="6">
+          <li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+      </div>
+    </div>
+  
+  </body>
+</html>
