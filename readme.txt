@@ -1,6 +1,6 @@
 Web Developer Code Test
 
-we ask you to please build a version of the popular game Connect Four using only HTML/CSS/Javascript. (http://en.wikipedia.org/wiki/Connect_Four)
+Build a version of the popular game Connect Four using only HTML/CSS/Javascript. (http://en.wikipedia.org/wiki/Connect_Four)
 
 Requirements:
 ● The game should be playable locally on a single screen by two players.
