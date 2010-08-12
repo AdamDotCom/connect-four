@@ -47,7 +47,7 @@ connectFour.core = function() {
         if (board[i][y] === playedDisc) {
           if ((i + settings.piecesToConnectForWin) <= settings.xAxis) {
             for ( var j = 0; j < settings.piecesToConnectForWin; j++) {
-              if(isWin(board[i+j][y], playedDisc, j+1)) { 
+              if(isWin(board[i+j][y], playedDisc, j)) { 
                 return true;
               }
             }        
@@ -66,7 +66,7 @@ connectFour.core = function() {
     
     var count = 0;
     for ( var i = y ; i >= 0 ; i--) {
-      if (isWin(board[column][i], playedDisc, count+1)) {
+      if (isWin(board[column][i], playedDisc, count)) {
         return true;
       } 
       count++;
@@ -75,40 +75,43 @@ connectFour.core = function() {
     return false;  
   }
   
+  /* There's a bug in here */ 
   function checkDiagonalWin(playedDisc, column, y) {
     if (settings.xAxis - column > 4) {
       // check right
-      if (y+1 < 4) {
+      if (y+1 <= 4) {
         // check up
         for ( var i = 0; i < 4; i++){
-          if(isWin(board[column+i][y+i], playedDisc, i+1)) { 
+          if(isWin(board[column+i][y+i], playedDisc, i)) { 
             return true;
           }
         }
       } else {
         // check down
         for ( var i = 0; i < 4; i++){
-          if(isWin(board[column+i][y-i], playedDisc, i+1)) { 
+          if(isWin(board[column+i][y-i], playedDisc, i)) { 
             return true;
           }
         }
       }
     } else {
       // check left
-      if (y+1 < 4) {
+      if (y+1 <= 4) {
         // check up
         var count = 0;
-        for ( var i = column ; i > 0; i--){
-          if(isWin(board[i][count], playedDisc, count+1)) {
-            return true;
+        if (column + 4 <= 7) {
+          for ( var i = column + 4 ; i > 0; i--){
+            if(isWin(board[i][count], playedDisc, count)) {
+              return true;
+            }
+            count++;
           }
-          count++;
-        }      
+        }
       } else {
         // check down
         var count = 0;
         for ( var i = column ; i > 0; i--){
-          if(isWin(board[i][y-count], playedDisc, count+1)) {
+          if(isWin(board[i][y-count], playedDisc, count)) {
             return true;
           }
           count++;
@@ -116,13 +119,17 @@ connectFour.core = function() {
       }
     }
     
+    
     return false;
   }
   
   var stack = [];
   function isWin(item, playedDisc, count){
+    if (count === 0) {
+      stack = [];
+    }
     stack.push(item);
-    if (count === settings.piecesToConnectForWin){
+    if (count+1 === settings.piecesToConnectForWin){
       for (var i = 0; i < stack.length ; i++) {
         if (stack[i] !== playedDisc) {
           stack = [];
